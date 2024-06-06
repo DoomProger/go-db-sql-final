@@ -41,7 +41,7 @@ func (s ParcelStore) Get(number int) (Parcel, error) {
 	err := row.Scan(&p.Number, &p.Client, &p.Status, &p.Address, &p.CreatedAt)
 
 	if err != nil {
-		return p, err
+		return Parcel{}, err
 	}
 
 	return p, nil
@@ -53,6 +53,7 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 
 	rows, err := s.db.Query("SELECT * FROM parcel WHERE client = :client", sql.Named("client", client))
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 	defer rows.Close()
@@ -62,6 +63,7 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 
 		err = rows.Scan(&p.Number, &p.Client, &p.Status, &p.Address, &p.CreatedAt)
 		if err != nil {
+			fmt.Println(err)
 			return nil, err
 		}
 
@@ -78,6 +80,7 @@ func (s ParcelStore) SetStatus(number int, status string) error {
 		sql.Named("number", number))
 
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
@@ -92,6 +95,7 @@ func (s ParcelStore) SetAddress(number int, address string) error {
 		sql.Named("status", ParcelStatusRegistered))
 
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
@@ -105,6 +109,7 @@ func (s ParcelStore) Delete(number int) error {
 		sql.Named("status", ParcelStatusRegistered))
 
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
 
