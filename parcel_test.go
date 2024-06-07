@@ -110,28 +110,20 @@ func TestGetByClient(t *testing.T) {
 		getTestParcel(),
 		getTestParcel(),
 	}
-	parcelMap := map[int]Parcel{}
 
 	client := randRange.Intn(10_000_000)
-	parcels[0].Client = client
-	parcels[1].Client = client
-	parcels[2].Client = client
+	for indx, parsc := range parcels {
+		parsc.Client = client
 
-	for i := 0; i < len(parcels); i++ {
-		id, err := store.Add(parcels[i])
+		id, err := store.Add(parsc)
 		require.NoError(t, err)
 
-		parcels[i].Number = id
+		parcels[indx].Client = client
+		parcels[indx].Number = id
 
-		parcelMap[id] = parcels[i]
 	}
 
 	storedParcels, err := store.GetByClient(client)
 	require.NoError(t, err)
-	require.Equal(t, len(parcels), len(storedParcels))
-
-	for _, parcel := range storedParcels {
-		require.Equal(t, parcel, parcelMap[parcel.Number])
-	}
-
+	assert.ElementsMatch(t, parcels, storedParcels)
 }

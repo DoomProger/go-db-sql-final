@@ -80,7 +80,6 @@ func (s ParcelStore) SetStatus(number int, status string) error {
 		sql.Named("number", number))
 
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
